@@ -14,7 +14,6 @@
 | Capital Budgeting | NPV, payback period, sensitivity analysis |
 | Employee Analytics | Headcount, tenure distribution, hiring cohort |
 
----
 
 ## Architecture
 
@@ -92,8 +91,8 @@ REVENUE ANALYSIS/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Beatrice-Wakarima/spaero-revenue-analysis.git
-cd spaero-revenue-analysis
+git clone https://github.com/Beatrice-Wakarima/spaero-analytics.git
+cd REVENUE ANALYSIS
 ```
 
 ### 2. Configure environment
@@ -117,7 +116,8 @@ DB_HOST_PORT=5439
 
 ```bash
 mkdir -p data
-# Copy your Excel files into data/
+cp data/
+       
 ```
 
 ### 4. Run the pipeline
@@ -130,11 +130,11 @@ Expected output:
 
 ```
 spaero_elt | [INFO]  SPAERO ELT – Extract & Load Pipeline Starting
-spaero_elt | [INFO]  ✔  raw.spaero_sales_sales_fact  (6,320 rows)  [initial_load]
-spaero_elt | [INFO]  ✔  raw.spaero_sales_customer_dim  (141 rows)  [initial_load]
+spaero_elt | [INFO]  raw.spaero_sales_sales_fact  (6,320 rows)  [initial_load]
+spaero_elt | [INFO]  raw.spaero_sales_customer_dim  (141 rows)  [initial_load]
 spaero_elt | [INFO]  Extract & Load pipeline complete.
 spaero_elt | [INFO]  SPAERO ELT – Transformation Pipeline Starting
-spaero_elt | [INFO]  [01/36] ➔ Extensions & Schema Initialisation  ✔
+spaero_elt | [INFO]  [01/36] ➔ Extensions & Schema Initialisation 
 spaero_elt | [INFO]  ...
 spaero_elt | [INFO]  Pipeline complete. 36/36 blocks deployed.
 spaero_elt exited with code 0
@@ -160,7 +160,6 @@ docker compose run --rm elt_pipeline
 
 Then click **Refresh** in Power BI Desktop.
 
----
 
 ## Docker Services
 
@@ -316,4 +315,4 @@ MIT — free to use, modify and distribute.
 ## Author
 
 Built by Beatrice — Data Engineer  
-[GitHub](https://github.com/Beatrice-Wakarima) · [LinkedIn](www.linkedin.com/in/beatricewwanjiru)
+[GitHub](https://github.com/Beatrice-Wakarima) · [LinkedIn](https://www.linkedin.com/in/beatricewwanjiru)
