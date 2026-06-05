@@ -1,0 +1,61 @@
+
+
+#  SPAERO – Finance & Sales ELT Pipeline
+#  Services:
+#    postgres_warehouse  – PostgreSQL 15 data warehouse
+#    elt_pipeline        – Runs extract → transform in sequence, then exits
+
+services:
+
+    # 1. PostgreSQL Data Warehouse
+  postgres_warehouse:
+    image: postgres:15-alpine
+    container_name: spaero_warehouse
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_USER:     ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB:       ${DB_NAME}
+    ports:
+      - "${DB_PORT:-5439}:5432"       # expose to host so Power BI can connect
+    volumes:
+      - postgres_data:/var/lib/postgresql/data   # persist data across restarts
+    networks:
+      - spaero_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # 2. ELT Pipeline  (extract → transform → done, container exits)
+  
+  elt_pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spaero_elt
+    env_file: .env
+    environment:
+      DB_HOST: postgres_warehouse   # resolves via spaero_net
+    volumes:
+      - ./data:/app/data:ro          # Excel source files (read-only)
+    networks:
+      - spaero_net
+    depends_on:
+      postgres_warehouse:
+        condition: service_healthy   # wait for Postgres to be ready
+    restart: "no"                    # run once and exit; re-run with docker compose run
+
+
+networks:
+  spaero_net:
+    name: spaero_network
+    driver: bridge
+
+
+volumes:
+  postgres_data:
+    name: spaero_postgres_data
